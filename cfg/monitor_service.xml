@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+    <type>LocalService</type>
+    <name>MyTestService</name>
+    <program>
+        <path>C:\Windows\System32\cmd.exe</path>
+        <params>
+            <item>1</item>
+            <item></item>
+            <item>3 3</item>
+        </params>
+    </program>
+</service>
