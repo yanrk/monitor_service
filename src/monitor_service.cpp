@@ -1,10 +1,10 @@
 /********************************************************
  * Description : monitor service
- * Author      : ryan
- * Email       : ryan@rayvision.com
+ * Author      : yanrk
+ * Email       : yanrkchina@163.com
  * Version     : 1.0
  * Date        : 2020.08.16
- * Copyright(C): RAYVISION
+ * Copyright(C): 2025
  ********************************************************/
 
 #include "log/log.h"
