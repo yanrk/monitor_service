@@ -26,44 +26,44 @@ static bool load_configuration(Goofer::ServiceRunAccount::v_t & service_run_acco
     if (!xml.load("monitor_service.xml"))
     {
         RUN_LOG_ERR("load {%s} failed", "monitor_service.xml");
-        return (false);
+        return false;
     }
 
     if (!xml.into_element("service"))
     {
         RUN_LOG_ERR("into element (%s) failed", "service");
-        return (false);
+        return false;
     }
 
     std::string service_type;
     if (!xml.get_element("type", service_type))
     {
         RUN_LOG_ERR("get element (%s) failed", "type");
-        return (false);
+        return false;
     }
 
     if (!xml.get_element("name", service_name))
     {
         RUN_LOG_ERR("get element (%s) failed", "name");
-        return (false);
+        return false;
     }
 
     if (!xml.into_element("program"))
     {
         RUN_LOG_ERR("into element (%s) failed", "program");
-        return (false);
+        return false;
     }
 
     if (!xml.get_element("path", program_path))
     {
         RUN_LOG_ERR("get element (%s) failed", "path");
-        return (false);
+        return false;
     }
 
     if (!xml.get_element_block("params", "item", false, program_param_list))
     {
         RUN_LOG_ERR("get element block (%s, %s) failed", "params", "item");
-        return (false);
+        return false;
     }
 
 #ifdef _MSC_VER
@@ -82,7 +82,7 @@ static bool load_configuration(Goofer::ServiceRunAccount::v_t & service_run_acco
     else
     {
         RUN_LOG_ERR("invalid service run account");
-        return (false);
+        return false;
     }
 #else
     service_run_account = Goofer::ServiceRunAccount::local_system;
@@ -91,30 +91,30 @@ static bool load_configuration(Goofer::ServiceRunAccount::v_t & service_run_acco
     if (service_name.empty())
     {
         RUN_LOG_ERR("service name is invalid");
-        return (false);
+        return false;
     }
 
     if (program_path.empty())
     {
         RUN_LOG_ERR("program path is invalid");
-        return (false);
+        return false;
     }
 
     bool program_path_is_directory = false;
     if (!Goofer::goofer_path_is_directory(program_path.c_str(), program_path_is_directory))
     {
         RUN_LOG_ERR("program path is not exist");
-        return (false);
+        return false;
     }
     else if (program_path_is_directory)
     {
         RUN_LOG_ERR("program path is not a file");
-        return (false);
+        return false;
     }
 
     program_param_list.push_front(program_path);
 
-    return (true);
+    return true;
 }
 
 static void pragram_params_to_command_line(const std::list<std::string> & command_params, std::string & command_line)
@@ -160,7 +160,7 @@ bool MonitorService::on_start(int argc, char * argv[])
 {
     if (argc <= 0 || nullptr == argv)
     {
-        return (false);
+        return false;
     }
 
     RUN_LOG_DBG("monitor service start begin");
@@ -171,12 +171,12 @@ bool MonitorService::on_start(int argc, char * argv[])
     if (!m_program_monitor_thread.joinable())
     {
         RUN_LOG_ERR("monitor service start failure while program monitor thread create failed");
-        return (false);
+        return false;
     }
 
     RUN_LOG_DBG("monitor service start success");
 
-    return (true);
+    return true;
 }
 
 bool MonitorService::on_stop()
@@ -211,12 +211,12 @@ bool MonitorService::on_stop()
 
         RUN_LOG_DBG("monitor service stop end");
     }
-    return (true);
+    return true;
 }
 
 bool MonitorService::running()
 {
-    return (m_running);
+    return m_running;
 }
 
 void MonitorService::monitor_program()
@@ -349,17 +349,17 @@ int main(int argc, char * argv[])
     if (!load_configuration(service_run_account, service_name, program_path, program_param_list))
     {
         RUN_LOG_ERR("load configuration failure");
-        return (-1);
+        return -1;
     }
 
     MonitorService monitor_service(service_run_account, program_path, program_param_list);
     if (!monitor_service.run(service_name.c_str(), argc, argv))
     {
         RUN_LOG_ERR("monitor service run failure");
-        return (-2);
+        return -2;
     }
 
     Goofer::Singleton<Goofer::LogSwitch>::instance().exit();
 
-    return (0);
+    return 0;
 }
